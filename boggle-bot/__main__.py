@@ -14,3 +14,5 @@ with Wordplays() as wp:
         sys.exit(1)
 
     print('Login successful.')
+
+    print(wp.get_boggle())
