@@ -10,11 +10,12 @@ Boggle::Boggle(bpy::object board) {
 	}
 }
 
-/* Subscript operators. */
-bpy::list Boggle::get(std::size_t i) const {
-	bpy::list row;
-	for (std::size_t j = 0; j < 4; ++j) {
-		row.append(board_[4 * i + j]);
-	}
-	return row;
+/* Accessor functions. */
+char Boggle::get(std::size_t i) const {
+	return board_[i];
+}
+
+/* Mutator functions. */
+void Boggle::set(std::size_t i, char c) {
+	board_[i] = c;
 }
