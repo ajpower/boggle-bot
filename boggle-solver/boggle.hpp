@@ -4,9 +4,12 @@
 #pragma once
 
 #include <array>
+#include <vector>
 #include <boost/python.hpp>
 
 #include "trie.hpp"
+
+constexpr std::size_t MAX_WORD_LENGTH = 18; // The longest word in 4x4 boggle is 17 letters.
 
 namespace bpy = boost::python;
 
@@ -14,6 +17,8 @@ namespace bpy = boost::python;
  * Class for representing and solving a 4x4 boggle board, meant to be used within Python.
  */
 // TODO len, str, docstrings, make setter and getters 2D?
+// TODO use unsigned instead of std::size_t when possible
+// TODO deal with exit time desctructor warning.
 class Boggle {
 public:
 	/* Constructors. */
@@ -39,6 +44,7 @@ public:
 	// Static functions.
 	/*
 	 * Add contents of dictionary to collection of legal words (implemented internally as a trie).
+	 * Words containing non-ASCII letters are ignored, and the words are reduced to lower case.
 	 */
 	static void add_dictionary(const std::string& dictionary_path);
 
@@ -48,6 +54,16 @@ private:
 
 	/* Static data members. */
 	static Trie<bool> trie; // Trie containing all legal words.
+
+	/* Helper functions. */
+	std::vector<char[MAX_WORD_LENGTH]> solve(unsigned i) const;
+
+	/* Static helper functions. */
+	/*
+	 * Place the indices of the boggle board that the square with index i neighbours into the given
+	 * array and return the number of neighbouring squares.
+	 */
+	static unsigned int neighbours(unsigned int i, std::array<unsigned int, 8>& neighbour_array);
 };
 
 BOOST_PYTHON_MODULE (boggle) {

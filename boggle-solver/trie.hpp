@@ -17,6 +17,7 @@ constexpr std::size_t ALPHABET = 26;
  * the keys are strings. Note that all strings are assumed to consist of lower case ASCII
  * characters only.
  */
+//TODO bitwise trie?
 template<typename V>
 class Trie {
 public:
