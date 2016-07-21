@@ -18,7 +18,7 @@ Trie::~Trie() {
 
 /* Accessor functions. */
 bool Trie::empty() const {
-	for (unsigned int i = 0; i < ALPHABET; ++i) {
+	for (unsigned int i = 0; i < children_.size(); ++i) {
 		if (children_[i]) {
 			return false;
 		}
@@ -30,10 +30,10 @@ bool Trie::has_string(const char *string) const {
 	const Trie *trie = this;
 	for (unsigned int i = 0; i < std::strlen(string); ++i) {
 		char c = string[i];
-		if (not trie->children_[c - 'A']) {
+		if (not trie->children_[static_cast<std::size_t>(c - 'A')]) {
 			return false;
 		}
-		trie = trie->children_[c - 'A'];
+		trie = trie->children_[static_cast<std::size_t>(c - 'A')];
 	}
 
 	// Check null character.
@@ -44,10 +44,10 @@ bool Trie::has_prefix(const char *prefix) const {
 	const Trie *trie = this;
 	for (unsigned int i = 0; i < std::strlen(prefix); ++i) {
 		char c = prefix[i];
-		if (not trie->children_[c - 'A']) {
+		if (not trie->children_[static_cast<std::size_t>(c - 'A')]) {
 			return false;
 		}
-		trie = trie->children_[c - 'A'];
+		trie = trie->children_[static_cast<std::size_t>(c - 'A')];
 	}
 	return true;
 }
@@ -58,10 +58,10 @@ void Trie::insert(const char *string) {
 	Trie *trie = this;
 	for (unsigned int i = 0; i < std::strlen(string); ++i) {
 		char c = string[i];
-		if (not trie->children_[c - 'A']) {
-			trie->children_[c - 'A'] = new Trie();
+		if (not trie->children_[static_cast<std::size_t>(c - 'A')]) {
+			trie->children_[static_cast<std::size_t>(c - 'A')] = new Trie();
 		}
-		trie = trie->children_[c - 'A'];
+		trie = trie->children_[static_cast<std::size_t>(c - 'A')];
 	}
 
 	trie->children_[ALPHABET + 1] = new Trie();
