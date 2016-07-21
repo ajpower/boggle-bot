@@ -41,7 +41,7 @@ constexpr std::array<unsigned int, 16> N_NEIGHBOURS = {
 }
 
 /* Declare static data members. */
-Trie<bool> Boggle::trie;
+Trie Boggle::trie;
 
 /* Constructors. */
 Boggle::Boggle(bpy::object board) {
@@ -66,8 +66,8 @@ void Boggle::add_dictionary(const std::string& dictionary_path) {
 	std::string line;
 	while (std::getline(file, line)) {
 		if (std::regex_match(line, std::regex("\\w+"))) {
-			std::transform(line.begin(), line.end(), line.begin(), ::tolower);
-			trie.add_string(line.c_str(), true);
+			std::transform(line.begin(), line.end(), line.begin(), ::toupper);
+			trie.insert(line.c_str());
 		}
 	}
 }

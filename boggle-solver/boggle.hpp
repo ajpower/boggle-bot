@@ -53,7 +53,7 @@ private:
 	std::array<char, 16> board_; // Boggle board.
 
 	/* Static data members. */
-	static Trie<bool> trie; // Trie containing all legal words.
+	static Trie trie; // Trie containing all legal words.
 
 	/* Helper functions. */
 	std::vector<char[MAX_WORD_LENGTH]> solve(unsigned i) const;

@@ -77,7 +77,7 @@ else ()
 endif ()
 
 # Set source files.
-set(SOURCE_FILES ${SRC_DIR}/boggle.cpp)
+set(SOURCE_FILES ${SRC_DIR}/boggle.cpp ${SRC_DIR}/trie.cpp)
 
 # Create shared object.
 add_library(${TARGET} SHARED ${SOURCE_FILES})
