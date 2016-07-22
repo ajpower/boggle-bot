@@ -18,8 +18,8 @@ Trie::~Trie() {
 
 /* Accessor functions. */
 bool Trie::empty() const {
-	for (unsigned int i = 0; i < children_.size(); ++i) {
-		if (children_[i]) {
+	for (const Trie *p : children_) {
+		if (p) {
 			return false;
 		}
 	}
@@ -29,25 +29,25 @@ bool Trie::empty() const {
 bool Trie::has_string(const char *string) const {
 	const Trie *trie = this;
 	for (unsigned int i = 0; i < std::strlen(string); ++i) {
-		char c = string[i];
-		if (not trie->children_[static_cast<std::size_t>(c - 'A')]) {
+		std::size_t child_index = static_cast<std::size_t>(string[i] - 'A');
+		if (not trie->children_[child_index]) {
 			return false;
 		}
-		trie = trie->children_[static_cast<std::size_t>(c - 'A')];
+		trie = trie->children_[child_index];
 	}
 
 	// Check null character.
-	return children_[ALPHABET + 1] != nullptr;
+	return children_[ALPHABET - 1] != nullptr;
 }
 
 bool Trie::has_prefix(const char *prefix) const {
 	const Trie *trie = this;
 	for (unsigned int i = 0; i < std::strlen(prefix); ++i) {
-		char c = prefix[i];
-		if (not trie->children_[static_cast<std::size_t>(c - 'A')]) {
+		std::size_t child_index = static_cast<std::size_t>(prefix[i] - 'A');
+		if (not trie->children_[child_index]) {
 			return false;
 		}
-		trie = trie->children_[static_cast<std::size_t>(c - 'A')];
+		trie = trie->children_[child_index];
 	}
 	return true;
 }
@@ -57,11 +57,11 @@ void Trie::insert(const char *string) {
 	// Note that the null character is added to the trie as the 27th child.
 	Trie *trie = this;
 	for (unsigned int i = 0; i < std::strlen(string); ++i) {
-		char c = string[i];
-		if (not trie->children_[static_cast<std::size_t>(c - 'A')]) {
-			trie->children_[static_cast<std::size_t>(c - 'A')] = new Trie();
+		std::size_t child_index = static_cast<std::size_t>(string[i] - 'A');
+		if (not trie->children_[child_index]) {
+			trie->children_[child_index] = new Trie();
 		}
-		trie = trie->children_[static_cast<std::size_t>(c - 'A')];
+		trie = trie->children_[child_index];
 	}
 
 	trie->children_[ALPHABET + 1] = new Trie();

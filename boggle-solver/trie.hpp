@@ -16,8 +16,8 @@ constexpr std::size_t ALPHABET = 27; // Each uppercase letter plus the null char
  * This implementation of the trie holds only strings containing uppercase ASCII letters. Attempts
  * to use strings containing anything else will lead to undefined behaviour.
  *
- * Deletion of strings is not supported as there is currently no reason to remove items from the
- * trie during a Boggle game.
+ * Deletion of strings is not presently supported as there is currently no reason to remove items
+ * from the trie during a boggle game.
  */
 //TODO bitwise trie?
 class Trie {

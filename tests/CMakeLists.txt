@@ -1,13 +1,17 @@
-set(DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+add_subdirectory(googletest/)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../boggle-solver)
+include_directories(googletest/googletest/include/)
+include_directories(${PROJECT_SOURCE_DIR}/boggle-solver)
 
-add_compile_options(-std=c++14)
-add_compile_options(-O3)
+add_executable(trie_test trie_test.cpp)
+target_link_libraries(trie_test
+                      gtest gtest_main)
 
-add_executable(trie_tests trie_tests.cpp)
-set_target_properties(trie_tests PROPERTIES
-                      RUNTIME_OUTPUT_DIRECTORY ${DESTINATION})
-target_link_libraries(trie_tests
-                      trie
-                      boost_unit_test_framework)
+# Disable warnings when building Google Test.
+target_compile_options(trie_test PRIVATE -w)
+target_compile_options(gmock PRIVATE -w)
+target_compile_options(gmock_main PRIVATE -w)
+target_compile_options(gtest PRIVATE -w)
+target_compile_options(gtest_main PRIVATE -w)
+
+add_test(trie_test trie_test)

@@ -1,5 +1,5 @@
-# Test executables.
-tests/bin/
+tests/bin
+tests/googletest
 
 # Created by .ignore support plugin (hsz.mobi)
 ### C++ template
