@@ -1,7 +1,16 @@
-benchmark/benchmark
+benchmark/Debug/
+benchmark/MinSizeRel/
+benchmark/Release/
+benchmark/RelWithDebInfo/
 
-tests/bin
-tests/googletest
+benchmark/benchmark/
+
+tests/Debug/
+tests/MinSizeRel/
+tests/Release/
+tests/RelWithDebInfo/
+
+tests/googletest/
 
 # Created by .ignore support plugin (hsz.mobi)
 ### C++ template
