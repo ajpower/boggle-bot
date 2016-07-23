@@ -4,10 +4,7 @@
 #pragma once
 
 #include <array>
-
-namespace {
-constexpr std::size_t ALPHABET = 27; // Each uppercase letter plus the null character.
-}
+#include <memory>
 
 /*
  * The trie is a data structure used as a dynamic set of strings. The trie can test for
@@ -20,6 +17,7 @@ constexpr std::size_t ALPHABET = 27; // Each uppercase letter plus the null char
  * from the trie during a boggle game.
  */
 //TODO bitwise trie?
+//TODO make case insensitive
 class Trie {
 public:
 	/* Constructors. */
@@ -27,9 +25,6 @@ public:
 	 * Create an empty trie.
 	 */
 	Trie();
-
-	/* Destructors. */
-	~Trie();
 
 	/* Accessor functions. */
 	/*
@@ -55,5 +50,6 @@ public:
 
 private:
 	/* Data members. */
-	std::array<Trie *, ALPHABET> children_; // The children of the root of the trie.
+	std::array<std::unique_ptr<Trie>, 27> children_; // The children of the root of the trie, one
+	// child for each uppercase character plus the null character.
 };

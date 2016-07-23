@@ -9,7 +9,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 		message(FATAL_ERROR "Clang version not supported.")
 	endif ()
 
-	add_compile_options(-std=c++11)
+	add_compile_options(-std=c++14)
 	add_compile_options(-O3)
 
 	add_compile_options(-Weverything)
@@ -34,7 +34,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 		message(FATAL_ERROR "GCC version not supported.")
 	endif ()
 
-	add_compile_options(-std=c++11)
+	add_compile_options(-std=c++14)
 	add_compile_options(-O3)
 
 	add_compile_options(-Wall)
