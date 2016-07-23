@@ -10,7 +10,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 	endif ()
 
 	add_compile_options(-std=c++14)
-	add_compile_options(-O3)
 
 	add_compile_options(-Weverything)
 
@@ -24,7 +23,14 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 		add_compile_options(-Werror)
 	endif ()
 
+	if (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
+		add_compile_options(-O3)
+		add_compile_options(-g)
+		add_compile_options(-Werror)
+	endif ()
+
 	if (CMAKE_BUILD_TYPE STREQUAL Release)
+		add_compile_options(-O3)
 		add_compile_options(-s)
 		add_compile_options(-DNDEBUG)
 	endif ()
@@ -35,7 +41,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 	endif ()
 
 	add_compile_options(-std=c++14)
-	add_compile_options(-O3)
 
 	add_compile_options(-Wall)
 	add_compile_options(-Wextra)
@@ -63,7 +68,14 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 		add_compile_options(-Werror)
 	endif ()
 
+	if (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
+		add_compile_options(-O3)
+		add_compile_options(-g)
+		add_compile_options(-Werror)
+	endif ()
+
 	if (CMAKE_BUILD_TYPE STREQUAL Release)
+		add_compile_options(-O3)
 		add_compile_options(-s)
 		add_compile_options(-DNDEBUG)
 	endif ()
