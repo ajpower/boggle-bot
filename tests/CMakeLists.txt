@@ -1,11 +1,11 @@
-add_subdirectory(googletest/)
+add_subdirectory(googletest)
 
 include_directories(googletest/googletest/include/)
-include_directories(${PROJECT_SOURCE_DIR}/boggle-solver)
+include_directories(${PROJECT_SOURCE_DIR}/boggle-solver/)
 
 add_executable(trie_test trie_test.cpp)
 set_target_properties(trie_test PROPERTIES
-                      RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+                      RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
 target_link_libraries(trie_test
                       trie
                       gtest

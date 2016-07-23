@@ -4,11 +4,17 @@
 #include "gtest/gtest.h"
 #include "trie.hpp"
 
+/*
+ * Test that the Trie default constructor executes successfully and creates an empty Trie.
+ */
 TEST(TrieTest, InitiallyEmpty) {
 	Trie trie;
 	EXPECT_TRUE(trie.empty());
 }
 
+/*
+ * Test the insertion and lookup of non-overlapping strings.
+ */
 TEST(TrieTest, HasStringNoOverlap) {
 	Trie trie;
 	trie.insert("A");
@@ -33,6 +39,9 @@ TEST(TrieTest, HasStringNoOverlap) {
 	EXPECT_FALSE(trie.has_string("PSYCHOLOGY"));
 }
 
+/*
+ * Test the insertion and lookup of overlapping strings.
+ */
 TEST(TrieTest, HasStringOverlap) {
 	Trie trie;
 	trie.insert("SOME");
@@ -59,6 +68,9 @@ TEST(TrieTest, HasStringOverlap) {
 	EXPECT_FALSE(trie.has_string("AB"));
 }
 
+/*
+ * Test the insertion of overlapping strings and the lookup of the strings' prefixes.
+ */
 TEST(TrieTest, HasPrefix) {
 	Trie trie;
 	trie.insert("SOME");

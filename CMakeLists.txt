@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.0.2)
 
 project(boggle-bot CXX)
 
-option(ENANBLE_TESTING "Enable testing" OFF)
+option(ENABLE_BENCHMARKS "Enable bencharks" OFF)
+option(ENABLE_TESTING "Enable testing" OFF)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 	if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5)
@@ -85,6 +86,10 @@ else ()
 endif ()
 
 add_subdirectory(boggle-solver)
+
+if (ENABLE_BENCHMARKS)
+	add_subdirectory(benchmark)
+endif ()
 
 if (ENABLE_TESTING)
 	enable_testing()

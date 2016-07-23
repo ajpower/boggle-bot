@@ -1,3 +1,5 @@
+benchmark/benchmark
+
 tests/bin
 tests/googletest
 
