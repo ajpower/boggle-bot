@@ -5,7 +5,7 @@ project(boggle-bot CXX)
 option(ENANBLE_TESTING "Enable testing" OFF)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
-	if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.3)
+	if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5)
 		message(FATAL_ERROR "Clang version not supported.")
 	endif ()
 
@@ -36,7 +36,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 	endif ()
 
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-	if (CMAKE_CXX_COMPILER_VERSION STREQUAL 4.8.1)
+	if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5)
 		message(FATAL_ERROR "GCC version not supported.")
 	endif ()
 
