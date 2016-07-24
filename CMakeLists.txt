@@ -21,12 +21,14 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
 	if (CMAKE_BUILD_TYPE STREQUAL Debug)
 		add_compile_options(-g)
+		add_compile_options(-fno-omit-frame-pointer)
 		add_compile_options(-Werror)
 	endif ()
 
 	if (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
 		add_compile_options(-O3)
 		add_compile_options(-g)
+		add_compile_options(-fno-omit-frame-pointer)
 		add_compile_options(-Werror)
 	endif ()
 
@@ -66,12 +68,14 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 
 	if (CMAKE_BUILD_TYPE STREQUAL Debug)
 		add_compile_options(-g)
+		add_compile_options(-fno-omit-frame-pointer)
 		add_compile_options(-Werror)
 	endif ()
 
 	if (CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
 		add_compile_options(-O3)
 		add_compile_options(-g)
+		add_compile_options(-fno-omit-frame-pointer)
 		add_compile_options(-Werror)
 	endif ()
 
