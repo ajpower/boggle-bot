@@ -27,6 +27,9 @@ public:
 	 */
 	std::array<char, M> operator[](std::size_t i) const;
 
+	/* Mutator functions. */
+	char *operator[](std::size_t i);
+
 private:
 	/* Data members. */
 	std::array<char, N * M> board_; // The N by M Boggle board. Must contain only uppercase ASCII
@@ -43,6 +46,12 @@ Boggle<N, M>::Boggle(const std::string& s) {
 template<std::size_t N, std::size_t M>
 std::array<char, M> Boggle<N, M>::operator[](std::size_t i) const {
 	std::array<char, M> row;
-	std::copy(board_.begin() + M * i, board_.begin() + M * i + M, row.begin());
+	std::copy(board_.begin(), board_.end(), row.begin());
 	return row;
+}
+
+/* Mutator functions. */
+template<std::size_t N, std::size_t M>
+char *Boggle<N, M>::operator[](std::size_t i) {
+	return &board_[M * i];
 }
