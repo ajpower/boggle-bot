@@ -16,10 +16,16 @@ public:
 	Boggle() = delete;
 
 	/*
-	 * Copy the contents of the given string into the Boggle board. No check are made to verify if
-	 * the string is of the appropriate size.
+	 * Copy the contents of the given string into the Boggle board. No checks are made to verify
+	 * that the string is of the appropriate size.
 	 */
 	Boggle(const std::string& s);
+
+	/* Accessor functions. */
+	/*
+	 * Return a copy of the elements in the ith row. No bounds checks are made.
+	 */
+	std::array<char, M> operator[](std::size_t i) const;
 
 private:
 	/* Data members. */
@@ -31,4 +37,12 @@ private:
 template<std::size_t N, std::size_t M>
 Boggle<N, M>::Boggle(const std::string& s) {
 	std::copy(s.begin(), s.end(), board_.begin());
+}
+
+/* Accessor functions. */
+template<std::size_t N, std::size_t M>
+std::array<char, M> Boggle<N, M>::operator[](std::size_t i) const {
+	std::array<char, M> row;
+	std::copy(board_.begin() + M * i, board_.begin() + M * i + M, row.begin());
+	return row;
 }
