@@ -10,7 +10,7 @@
 TEST(BoggleTest, Constructor) {
 	Boggle<2> boggle_2x2("ABCD");
 	Boggle<2, 4> boggle_2x4("ABCDEFGH");
-	Boggle<4> boggle_4x4("ABCDEFGHIJKLMNOP");
+	Boggle<> boggle_4x4("ABCDEFGHIJKLMNOP");
 
 	EXPECT_EQ(4 * sizeof(char), sizeof(boggle_2x2));
 	EXPECT_EQ(8 * sizeof(char), sizeof(boggle_2x4));
@@ -56,4 +56,11 @@ TEST(BoggleTest, MutatorOperator) {
 	EXPECT_EQ('U', boggle[1][1]);
 	EXPECT_EQ('T', boggle[1][2]);
 	EXPECT_EQ('S', boggle[1][3]);
+}
+
+/*
+ * Test the loading of a dictionary.
+ */
+TEST(BoggleTest, LoadDictionary) {
+	Boggle<>::load_dictionary("/usr/share/dict/words");
 }

@@ -16,6 +16,7 @@ add_executable(boggle_test boggle_test.cpp)
 set_target_properties(boggle_test PROPERTIES
                       RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE})
 target_link_libraries(boggle_test
+                      trie
                       gtest
                       gtest_main)
 
