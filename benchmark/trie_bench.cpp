@@ -25,11 +25,10 @@ bool ascii_word(const std::string& s) {
 
 /*
  * Load the words in /usr/share/dict/words into a vector. Words are converted to uppercase
- * characters and excluded if they include non-ASCII letters. Note that the longest word in the
- * dictionary is 23 characters.
+ * characters and excluded if they include non-ASCII letters.
  */
-std::vector<std::array<char, 24>> load_dictionary() {
-	std::vector<std::array<char, 24>> words;
+std::vector<std::string> load_dictionary() {
+	std::vector<std::string> words;
 	words.reserve(100000); // Approximately 100,000 words in the dictionary.
 
 	std::ifstream file("/usr/share/dict/words");
@@ -39,10 +38,7 @@ std::vector<std::array<char, 24>> load_dictionary() {
 			continue;
 		}
 		std::transform(line.begin(), line.end(), line.begin(), ::toupper);
-
-		std::array<char, 24> word;
-		std::copy(line.begin(), line.end() + 1, word.begin()); // Need to include null character.
-		words.push_back(word);
+		words.push_back(line);
 	}
 
 	return words;
@@ -76,11 +72,11 @@ BENCHMARK(trie_single_insertion);
  * Benchmark the insertion of a string when inserting an entire dictionary.
  */
 static void trie_dictionary_insertion(benchmark::State& state) {
-	std::vector<std::array<char, 24>> dictionary = load_dictionary();
-	std::vector<std::array<char, 24>>::size_type i = 0;
+	std::vector<std::string> dictionary = load_dictionary();
+	std::vector<std::string>::size_type i = 0;
 	Trie trie;
 	while (state.KeepRunning()) {
-		trie.insert(dictionary[i].data());
+		trie.insert(dictionary[i].c_str());
 		if (i == dictionary.size() - 1) {
 			i = 0;
 		}
@@ -96,10 +92,10 @@ BENCHMARK(trie_dictionary_insertion);
  * Benchmark the lookup of the string "THE" in a trie that has been loaded with a dictionary.
  */
 static void trie_single_short_lookup(benchmark::State& state) {
-	std::vector<std::array<char, 24>> dictionary = load_dictionary();
+	std::vector<std::string> dictionary = load_dictionary();
 	Trie trie;
 	for (const auto& word : dictionary) {
-		trie.insert(word.data());
+		trie.insert(word.c_str());
 	}
 	while (state.KeepRunning()) {
 		trie.has_string("THE");
@@ -113,10 +109,10 @@ BENCHMARK(trie_single_short_lookup);
  * dictionary.
  */
 static void trie_single_long_lookup(benchmark::State& state) {
-	std::vector<std::array<char, 24>> dictionary = load_dictionary();
+	std::vector<std::string> dictionary = load_dictionary();
 	Trie trie;
 	for (const auto& word : dictionary) {
-		trie.insert(word.data());
+		trie.insert(word.c_str());
 	}
 	while (state.KeepRunning()) {
 		trie.has_string("ELECTROENCEPHALOGRAPHS");
@@ -130,15 +126,15 @@ BENCHMARK(trie_single_long_lookup);
  * dictionary.
  */
 static void trie_dictionary_lookup(benchmark::State& state) {
-	std::vector<std::array<char, 24>> dictionary = load_dictionary();
+	std::vector<std::string> dictionary = load_dictionary();
 	Trie trie;
 	for (const auto& word : dictionary) {
-		trie.insert(word.data());
+		trie.insert(word.c_str());
 	}
 
 	std::vector<std::array<char, 24>>::size_type i = 0;
 	while (state.KeepRunning()) {
-		trie.has_string(dictionary[i].data());
+		trie.has_string(dictionary[i].c_str());
 		if (i == dictionary.size() - 1) {
 			i = 0;
 		}
