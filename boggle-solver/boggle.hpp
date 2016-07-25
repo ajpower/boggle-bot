@@ -26,13 +26,13 @@ public:
 
 	/* Accessor functions. */
 	/*
-	 * Return a copy of the elements in the ith row. No bounds checks are made.
+	 * Return a constant pointer to the first element in the ith row. No bounds checks are made.
 	 */
-	std::array<char, M> operator[](std::size_t i) const;
+	const char *operator[](std::size_t i) const;
 
 	/* Mutator functions. */
 	/*
-	 * Return a pointer to the first element in the ith row. Now bounds checks are made.
+	 * Return a pointer to the first element in the ith row. No bounds checks are made.
 	 */
 	char *operator[](std::size_t i);
 
@@ -71,10 +71,8 @@ Boggle<N, M>::Boggle(const std::string& s) {
 
 /* Accessor functions. */
 template<std::size_t N, std::size_t M>
-std::array<char, M> Boggle<N, M>::operator[](std::size_t i) const {
-	std::array<char, M> row;
-	std::copy(board_.begin(), board_.end(), row.begin());
-	return row;
+const char *Boggle<N, M>::operator[](std::size_t i) const {
+	return &board_[M * i];
 }
 
 /* Mutator functions. */
