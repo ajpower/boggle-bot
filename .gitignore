@@ -1,14 +1,4 @@
-benchmark/Debug/
-benchmark/MinSizeRel/
-benchmark/Release/
-benchmark/RelWithDebInfo/
-
 benchmark/benchmark/
-
-tests/Debug/
-tests/MinSizeRel/
-tests/Release/
-tests/RelWithDebInfo/
 
 tests/googletest/
 

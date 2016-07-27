@@ -4,8 +4,6 @@ include_directories(${PROJECT_SOURCE_DIR}/boggle-solver/)
 include_directories(benchmark/include/)
 
 add_executable(trie_bench trie_bench.cpp)
-set_target_properties(trie_bench PROPERTIES
-                      RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE})
 target_link_libraries(trie_bench
                       trie
                       benchmark)

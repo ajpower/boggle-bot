@@ -5,11 +5,9 @@
 
 #include "trie.hpp"
 
-/* Constructors. */
 Trie::Trie() :
 		children_() { }
 
-/* Accessor functions. */
 bool Trie::empty() const {
 	for (const auto& p_trie : children_) {
 		if (p_trie) {
@@ -45,7 +43,6 @@ bool Trie::has_prefix(const char *prefix) const {
 	return true;
 }
 
-/* Mutator functions. */
 void Trie::insert(const char *string) {
 	Trie *p_trie = this;
 	for (unsigned int i = 0; i < std::strlen(string); ++i) {

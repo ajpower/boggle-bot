@@ -64,3 +64,13 @@ TEST(BoggleTest, MutatorOperator) {
 TEST(BoggleTest, LoadDictionary) {
 	Boggle<>::load_dictionary("/usr/share/dict/words");
 }
+
+TEST(BoggleTest, Solver) {
+	Boggle<3> boggle("ABCDEFGHI");
+	boggle.load_dictionary("usr/share/dict/words");
+
+	std::vector<std::string> solution = boggle.solve(0);
+	for (const std::string& word : solution) {
+		std::cout << word << std::endl;
+	}
+}

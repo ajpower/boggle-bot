@@ -4,8 +4,6 @@ include_directories(googletest/googletest/include/)
 include_directories(${PROJECT_SOURCE_DIR}/boggle-solver/)
 
 add_executable(trie_test trie_test.cpp)
-set_target_properties(trie_test PROPERTIES
-                      RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE})
 target_link_libraries(trie_test
                       trie
                       gtest
@@ -13,8 +11,6 @@ target_link_libraries(trie_test
 add_dependencies(trie_test trie)
 
 add_executable(boggle_test boggle_test.cpp)
-set_target_properties(boggle_test PROPERTIES
-                      RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE})
 target_link_libraries(boggle_test
                       trie
                       gtest

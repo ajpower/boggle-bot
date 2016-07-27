@@ -20,13 +20,11 @@
 //TODO make case insensitive
 class Trie {
 public:
-	/* Constructors. */
 	/*
 	 * Create an empty trie.
 	 */
 	Trie();
 
-	/* Accessor functions. */
 	/*
 	 * Return true if the trie is empty.
 	 */
@@ -42,14 +40,12 @@ public:
 	 */
 	bool has_prefix(const char *prefix) const;
 
-	/* Mutator functions. */
 	/*
 	 * Insert the given string into the trie.
 	 */
 	void insert(const char *string);
 
 private:
-	/* Data members. */
 	std::array<std::unique_ptr<Trie>, 27> children_; // The children of the root of the trie, one
 	// child for each uppercase character plus the null character.
 };
