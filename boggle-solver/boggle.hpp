@@ -11,7 +11,7 @@
 /*
  * Represents an N by M Boggle board.
  */
-template<std::size_t N = 4, std::size_t M = N>
+template <std::size_t N = 4, std::size_t M = N>
 class Boggle {
 public:
 	Boggle() = delete;
@@ -68,25 +68,25 @@ private:
 };
 
 /* Redeclaration of static data members. */
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 Trie Boggle<N, M>::trie;
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 Boggle<N, M>::Boggle(const std::string& s) {
 	std::copy(s.begin(), s.end(), board_.begin());
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 const char *Boggle<N, M>::operator[](std::size_t i) const {
 	return &board_[M * i];
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 char *Boggle<N, M>::operator[](std::size_t i) {
 	return &board_[M * i];
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 void Boggle<N, M>::load_dictionary(const std::string& file) {
 	std::vector<std::string> words;
 	std::ifstream infile(file);
@@ -105,7 +105,7 @@ void Boggle<N, M>::load_dictionary(const std::string& file) {
 	}
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 std::vector<std::string> Boggle<N, M>::solve(std::size_t starting_index) const {
 	//TODO add algorithm description.
 	using path_t = std::vector<std::size_t>;
@@ -143,12 +143,12 @@ std::vector<std::string> Boggle<N, M>::solve(std::size_t starting_index) const {
 }
 
 //TODO statically create table
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 std::vector<std::size_t> Boggle<N, M>::neighbours(std::size_t square_index) {
 
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 bool Boggle<N, M>::ascii_word(const std::string& s) {
 	for (char c : s) {
 		if (c < 'A' or (c > 'Z' and c < 'a') or c > 'z') {
@@ -158,7 +158,7 @@ bool Boggle<N, M>::ascii_word(const std::string& s) {
 	return true;
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 void Boggle<N, M>::path_to_string(const std::vector<std::size_t>& path, char *s) {
 	std::size_t i = 0;
 	for (std::size_t board_index : path) {

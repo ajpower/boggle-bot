@@ -1,9 +1,18 @@
 #include <cstring>
+#include <vector>
 
 #include "trie.hpp"
 
 Trie::Trie() :
 		children_() { }
+
+Trie::Trie(Trie&& other) :
+		children_(std::move(other.children_)) { }
+
+Trie& Trie::operator=(Trie&& other) {
+	children_ = std::move(other.children_);
+	return *this;
+}
 
 bool Trie::empty() const {
 	for (const auto& p_trie : children_) {
@@ -14,10 +23,10 @@ bool Trie::empty() const {
 	return true;
 }
 
-bool Trie::has_string(const char *string) const {
+bool Trie::has_string(const char *s) const {
 	const Trie *p_trie = this;
-	for (unsigned int i = 0; i < std::strlen(string); ++i) {
-		std::size_t child_index = static_cast<std::size_t>(string[i] - 'A');
+	for (unsigned int i = 0; i < std::strlen(s); ++i) {
+		std::size_t child_index = static_cast<std::size_t>(s[i] - 'A');
 		if (not p_trie->children_[child_index]) {
 			return false;
 		}
@@ -40,10 +49,10 @@ bool Trie::has_prefix(const char *prefix) const {
 	return true;
 }
 
-void Trie::insert(const char *string) {
+void Trie::insert(const char *s) {
 	Trie *p_trie = this;
-	for (unsigned int i = 0; i < std::strlen(string); ++i) {
-		std::size_t child_index = static_cast<std::size_t>(string[i] - 'A');
+	for (unsigned int i = 0; i < std::strlen(s); ++i) {
+		std::size_t child_index = static_cast<std::size_t>(s[i] - 'A');
 		if (not p_trie->children_[child_index]) {
 			p_trie->children_[child_index] = std::make_unique<Trie>();
 		}

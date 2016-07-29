@@ -100,3 +100,46 @@ TEST(TrieTest, HasPrefix) {
 	EXPECT_FALSE(trie.has_prefix("ABSOLVER"));
 	EXPECT_FALSE(trie.has_prefix("PACES"));
 }
+
+TEST(TrieTest, MoveConstructor) {
+	Trie trie;
+	trie.insert("SOME");
+	trie.insert("SOMETIMES");
+	trie.insert("SPACETIME");
+	trie.insert("SPACE");
+	trie.insert("ABSOLUTE");
+	trie.insert("ABSOLVE");
+
+	Trie other(std::move(trie));
+
+	EXPECT_TRUE(other.has_prefix("SOME"));
+	EXPECT_TRUE(other.has_prefix("SOMETIMES"));
+	EXPECT_TRUE(other.has_prefix("SPACETIME"));
+	EXPECT_TRUE(other.has_prefix("SPACE"));
+	EXPECT_TRUE(other.has_prefix("ABSOLUTE"));
+	EXPECT_TRUE(other.has_prefix("ABSOLVE"));
+
+	EXPECT_TRUE(trie.empty());
+}
+
+TEST(TrieTest, MoveAssignment) {
+	Trie trie;
+	trie.insert("SOME");
+	trie.insert("SOMETIMES");
+	trie.insert("SPACETIME");
+	trie.insert("SPACE");
+	trie.insert("ABSOLUTE");
+	trie.insert("ABSOLVE");
+
+	Trie other;
+	other = std::move(trie);
+
+	EXPECT_TRUE(other.has_prefix("SOME"));
+	EXPECT_TRUE(other.has_prefix("SOMETIMES"));
+	EXPECT_TRUE(other.has_prefix("SPACETIME"));
+	EXPECT_TRUE(other.has_prefix("SPACE"));
+	EXPECT_TRUE(other.has_prefix("ABSOLUTE"));
+	EXPECT_TRUE(other.has_prefix("ABSOLVE"));
+
+	EXPECT_TRUE(trie.empty());
+}
