@@ -1,6 +1,3 @@
-/*
- * Declaration of the Trie class.
- */
 #pragma once
 
 #include <array>

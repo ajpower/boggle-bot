@@ -1,6 +1,3 @@
-/*
- * Implementation of the Trie class.
- */
 #include <cstring>
 
 #include "trie.hpp"

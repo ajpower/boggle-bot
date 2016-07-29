@@ -1,6 +1,3 @@
-/*
- * Declaration and implementation of the Boggle class.
- */
 #pragma once
 
 #include <array>
