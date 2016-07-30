@@ -1,5 +1,5 @@
+#include <algorithm>
 #include <cstring>
-#include <vector>
 
 #include "trie.hpp"
 
@@ -15,12 +15,9 @@ Trie& Trie::operator=(Trie&& other) {
 }
 
 bool Trie::empty() const {
-	for (const auto& p_trie : children_) {
-		if (p_trie) {
-			return false;
-		}
-	}
-	return true;
+	return std::all_of(children_.begin(), children_.end(), [](const auto& p) {
+		return p == nullptr;
+	});
 }
 
 bool Trie::has_string(const char *s) const {
@@ -34,7 +31,7 @@ bool Trie::has_string(const char *s) const {
 	}
 
 	// Check null character.
-	return p_trie->children_[children_.size() - 1] != nullptr;
+	return p_trie->children_.back() != nullptr;
 }
 
 bool Trie::has_prefix(const char *prefix) const {
@@ -60,5 +57,5 @@ void Trie::insert(const char *s) {
 	}
 
 	// Add null character.
-	p_trie->children_[children_.size() - 1] = std::make_unique<Trie>();
+	p_trie->children_.back() = std::make_unique<Trie>();
 }
