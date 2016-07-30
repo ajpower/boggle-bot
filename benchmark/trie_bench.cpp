@@ -1,6 +1,3 @@
-/*
- * Micro benchmarks for the Trie class.
- */
 #include <algorithm>
 #include <array>
 #include <fstream>
@@ -15,12 +12,9 @@ namespace {
  * Return true if string only contains ASCII letters.
  */
 bool ascii_word(const std::string& s) {
-	for (char c : s) {
-		if (c < 'A' or (c > 'Z' and c < 'a') or c > 'z') {
-			return false;
-		}
-	}
-	return true;
+	return std::all_of(s.begin(), s.end(), [](char c) {
+		return (c >= 'A' and c <= 'Z') or (c >= 'a' and c <= 'z');
+	});
 }
 
 /*
@@ -34,11 +28,10 @@ std::vector<std::string> load_dictionary() {
 	std::ifstream file("/usr/share/dict/words");
 	std::string line;
 	while (std::getline(file, line)) {
-		if (not ascii_word(line)) {
-			continue;
+		if (ascii_word(line)) {
+			std::transform(line.begin(), line.end(), line.begin(), ::toupper);
+			words.push_back(line);
 		}
-		std::transform(line.begin(), line.end(), line.begin(), ::toupper);
-		words.push_back(line);
 	}
 
 	return words;
@@ -77,12 +70,7 @@ static void trie_dictionary_insertion(benchmark::State& state) {
 	Trie trie;
 	while (state.KeepRunning()) {
 		trie.insert(dictionary[i].c_str());
-		if (i == dictionary.size() - 1) {
-			i = 0;
-		}
-		else {
-			++i;
-		}
+		i == dictionary.size() - 1 ? i = 0 : ++i;
 	}
 }
 
@@ -135,12 +123,7 @@ static void trie_dictionary_lookup(benchmark::State& state) {
 	std::vector<std::array<char, 24>>::size_type i = 0;
 	while (state.KeepRunning()) {
 		trie.has_string(dictionary[i].c_str());
-		if (i == dictionary.size() - 1) {
-			i = 0;
-		}
-		else {
-			++i;
-		}
+		i == dictionary.size() - 1 ? i = 0 : ++i;
 	}
 }
 
