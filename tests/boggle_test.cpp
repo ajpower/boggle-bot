@@ -12,9 +12,9 @@ TEST(BoggleTest, Constructor) {
 	Boggle<2, 4> boggle_2x4("ABCDEFGH");
 	Boggle<> boggle_4x4("ABCDEFGHIJKLMNOP");
 
-	EXPECT_EQ(4 * sizeof(char), sizeof(boggle_2x2));
-	EXPECT_EQ(8 * sizeof(char), sizeof(boggle_2x4));
-	EXPECT_EQ(16 * sizeof(char), sizeof(boggle_4x4));
+	EXPECT_EQ(sizeof(boggle_2x2), 4 * sizeof(char));
+	EXPECT_EQ(sizeof(boggle_2x4), 8 * sizeof(char));
+	EXPECT_EQ(sizeof(boggle_4x4), 16 * sizeof(char));
 }
 
 /*
@@ -63,14 +63,4 @@ TEST(BoggleTest, MutatorOperator) {
  */
 TEST(BoggleTest, LoadDictionary) {
 	Boggle<>::load_dictionary("/usr/share/dict/words");
-}
-
-TEST(BoggleTest, Solver) {
-	Boggle<3> boggle("ABCDEFGHI");
-	boggle.load_dictionary("usr/share/dict/words");
-
-	std::vector<std::string> solution = boggle.solve(0);
-	for (const std::string& word : solution) {
-		std::cout << word << std::endl;
-	}
 }
