@@ -1,3 +1,4 @@
+option(BENCHMARK_ENABLE_TESTING OFF)
 add_subdirectory(benchmark)
 
 include_directories(${PROJECT_SOURCE_DIR}/boggle-solver/)

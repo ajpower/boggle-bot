@@ -5,6 +5,10 @@ project(boggle-bot CXX)
 option(ENABLE_BENCHMARKS "Enable bencharks" OFF)
 option(ENABLE_TESTING "Enable testing" OFF)
 
+if (NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+endif ()
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 	if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.5)
 		message(FATAL_ERROR "Clang version not supported.")
