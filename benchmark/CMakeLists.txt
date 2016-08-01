@@ -10,6 +10,13 @@ target_link_libraries(trie_bench
                       benchmark)
 add_dependencies(trie_bench trie)
 
+add_executable(boggle_bench boggle_bench.cpp)
+target_link_libraries(boggle_bench
+                      trie
+                      benchmark)
+add_dependencies(boggle_bench trie)
+
 # Disable warnings when building Google Benchmark.
+target_compile_options(boggle_bench PRIVATE -w)
 target_compile_options(trie_bench PRIVATE -w)
 target_compile_options(benchmark PRIVATE -w)

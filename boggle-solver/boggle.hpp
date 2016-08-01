@@ -35,6 +35,8 @@ public:
 	 */
 	char *operator[](std::size_t i);
 
+	std::vector<std::string> solve() const;
+
 	/*
 	 * Load the words from file, transform them to uppercase, and insert them into the trie. Words
 	 * containing non-ASCII letters are ignored.
@@ -95,7 +97,7 @@ private:
 	/*
 	 * Return the word formed by following the given path through the Boggle board.
 	 */
-	std::string path2word(const std::vector<std::size_t>& path);
+	std::string path2word(const std::vector<std::size_t>& path) const;
 
 	/*
 	 * Return true if string contains only ASCII letters.
@@ -123,6 +125,17 @@ const char *Boggle<N, M>::operator[](std::size_t i) const {
 template <std::size_t N, std::size_t M>
 char *Boggle<N, M>::operator[](std::size_t i) {
 	return &board_[M * i];
+}
+
+template <std::size_t N, std::size_t M>
+std::vector<std::string> Boggle<N, M>::solve() const {
+	// TODO make multithreaded
+	std::vector<std::string> words;
+	for (std::size_t i = 0; i < board_.size(); ++i) {
+		solve(i, words);
+	}
+
+	return words;
 }
 
 template <std::size_t N, std::size_t M>
@@ -161,7 +174,7 @@ void Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words) const {
 		if (not trie.has_prefix(word.c_str())) {
 			continue;
 		}
-		if (trie.has_string(word.c_str())) {
+		if (word.size() >= 3 and trie.has_string(word.c_str())) {
 			words.push_back(std::move(word));
 		}
 
@@ -185,7 +198,7 @@ bool Boggle<N, M>::ascii_word(const std::string& s) {
 }
 
 template <std::size_t N, std::size_t M>
-std::string Boggle<N, M>::path2word(const std::vector<std::size_t>& path) {
+std::string Boggle<N, M>::path2word(const std::vector<std::size_t>& path) const {
 	std::string word;
 	for (auto i : path) {
 		char c = board_[i];
