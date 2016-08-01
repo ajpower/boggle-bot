@@ -18,14 +18,14 @@ bool ascii_word(const std::string& s) {
 }
 
 /*
- * Load the words in /usr/share/dict/words into a vector. Words are converted to uppercase
- * characters and excluded if they include non-ASCII letters.
+ * Load the words in dictionary into a vector. Words are converted to uppercase characters and
+ * excluded if they include non-ASCII letters.
  */
 std::vector<std::string> load_dictionary() {
 	std::vector<std::string> words;
-	words.reserve(100000); // Approximately 100,000 words in the dictionary.
+	words.reserve(80000); // Approximately 80,000 words in the dictionary.
 
-	std::ifstream file("/usr/share/dict/words");
+	std::ifstream file(DICT_PATH);
 	std::string line;
 	while (std::getline(file, line)) {
 		if (ascii_word(line)) {

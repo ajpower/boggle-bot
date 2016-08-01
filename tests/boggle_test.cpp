@@ -62,5 +62,5 @@ TEST(BoggleTest, MutatorOperator) {
  * Test the loading of a dictionary.
  */
 TEST(BoggleTest, LoadDictionary) {
-	Boggle<>::load_dictionary("/usr/share/dict/words");
+	Boggle<>::load_dictionary(DICT_PATH);
 }

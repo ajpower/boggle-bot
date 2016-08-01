@@ -20,3 +20,6 @@ add_dependencies(boggle_bench trie)
 target_compile_options(boggle_bench PRIVATE -w)
 target_compile_options(trie_bench PRIVATE -w)
 target_compile_options(benchmark PRIVATE -w)
+
+# Add path to dictionary.
+add_definitions(-DDICT_PATH="${PROJECT_SOURCE_DIR}/boggle-bot/dict.list")

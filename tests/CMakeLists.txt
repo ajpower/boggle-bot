@@ -25,3 +25,6 @@ target_compile_options(gtest PRIVATE -w)
 target_compile_options(gtest_main PRIVATE -w)
 
 add_test(trie_test trie_test)
+
+# Add path to dictionary.
+add_definitions(-DDICT_PATH="${PROJECT_SOURCE_DIR}/boggle-bot/dict.list")

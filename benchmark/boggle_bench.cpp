@@ -33,7 +33,7 @@ std::string random_string(std::size_t length) {
  */
 template <std::size_t N, std::size_t M>
 static void boggle_solve(benchmark::State& state) {
-	Boggle<N, M>::load_dictionary("/usr/share/dict/words");
+	Boggle<N, M>::load_dictionary(DICT_PATH);
 	while (state.KeepRunning()) {
 		std::string random_str = random_string(N * M);
 		Boggle<N, M> boggle(random_str);
