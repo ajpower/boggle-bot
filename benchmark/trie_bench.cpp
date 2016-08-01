@@ -23,7 +23,6 @@ bool ascii_word(const std::string& s) {
  */
 std::vector<std::string> load_dictionary() {
 	std::vector<std::string> words;
-	words.reserve(80000); // Approximately 80,000 words in the dictionary.
 
 	std::ifstream file(DICT_PATH);
 	std::string line;

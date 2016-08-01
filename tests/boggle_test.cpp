@@ -64,3 +64,7 @@ TEST(BoggleTest, MutatorOperator) {
 TEST(BoggleTest, LoadDictionary) {
 	Boggle<>::load_dictionary(DICT_PATH);
 }
+
+TEST(BoggleTest, Solve4x4) {
+	Boggle<4>::load_dictionary(DICT_PATH);
+}

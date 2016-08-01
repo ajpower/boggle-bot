@@ -175,7 +175,10 @@ void Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words) const {
 			continue;
 		}
 		if (word.size() >= 3 and trie.has_string(word.c_str())) {
-			words.push_back(std::move(word));
+			// Make sure word is unique.
+			if (std::find(words.begin(), words.end(), word) == words.end()) {
+				words.push_back(std::move(word));
+			}
 		}
 
 		std::size_t last_square = path.back();
