@@ -35,6 +35,9 @@ public:
 	 */
 	char *operator[](std::size_t i);
 
+	/*
+	 * Return the words in the Boggle board.
+	 */
 	std::vector<std::string> solve() const;
 
 	/*
@@ -166,7 +169,8 @@ void Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words) const {
 	// In this implementation, a stack is used to hold the *paths* through the Boggle board that
 	// need to be analyzed and extended. Analysis means 1) checking whether the path makes a valid
 	// word; and 2) whether the path forms the prefix of a valid word (if not, path is discarded).
-	// Paths are extended by joining the neighbours of the last square of the path.
+	// Paths are extended by joining the neighbours of the last square of the path that are not
+	// already in the path.
 
 	using path_t = boost::container::static_vector<std::size_t, N * M>;
 
