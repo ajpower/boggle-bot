@@ -85,7 +85,9 @@ TEST(BoggleTest, Solve4x4) {
 		char c;
 		while (ss.peek() != ',') {
 			ss >> c;
-			boggle_board.push_back(c);
+			if (c != 'u') {
+				boggle_board.push_back(c);
+			}
 		}
 		ss.ignore();
 		while (ss >> c) {

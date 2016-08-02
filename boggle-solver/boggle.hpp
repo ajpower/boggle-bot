@@ -21,7 +21,7 @@ public:
 	/*
 	 * Copy the contents of the given string into the Boggle board. The string must contain only
 	 * uppercase ASCII letters. No checks are made to verify that the string is of the appropriate
-	 * size.
+	 * size. The character 'Q' is interpreted as the square 'QU'.
 	 */
 	Boggle(const std::string& s);
 
