@@ -16,7 +16,7 @@
 /*
  * Represents an N by M Boggle board.
  */
-template<std::size_t N = 4, std::size_t M = N>
+template <std::size_t N = 4, std::size_t M = N>
 class Boggle {
 public:
 	Boggle() = delete;
@@ -72,6 +72,7 @@ private:
 
 				for (std::size_t row = min_row; row <= max_row; ++row) {
 					for (std::size_t col = min_col; col <= max_col; ++col) {
+						// Make sure not to add the square itself.
 						if (row * M + col != i) {
 							neighbours_[i].push_back(row * M + col);
 						}
@@ -104,7 +105,7 @@ private:
 	/*
 	 * Return the word formed by following the given path through the Boggle board.
 	 */
-	template<typename T>
+	template <typename T>
 	std::string path2word(const T& path) const;
 
 	/*
@@ -114,45 +115,45 @@ private:
 };
 
 /* Redeclaration of static data members. */
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 Trie Boggle<N, M>::trie;
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 const typename Boggle<N, M>::NeighbourTable Boggle<N, M>::neighbour_table;
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 Boggle<N, M>::Boggle(const std::string& s) {
 	std::copy(s.begin(), s.end(), board_.begin());
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 const char *Boggle<N, M>::operator[](std::size_t i) const {
 	return &board_[M * i];
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 char *Boggle<N, M>::operator[](std::size_t i) {
 	return &board_[M * i];
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 std::vector<std::string> Boggle<N, M>::solve() const {
 	std::vector<std::string> words;
 	words.reserve(512); // There is typically at most 500 words in a 4 by 4 Boggle board.
 
-	// Create threads and assign Boggle squares to each. Create mutex to ensure writes to protect
-	// words.
+	// Create threads and assign Boggle squares to each. Create mutex to ensure 'words' is protected
+	// during writes.
 	auto n_threads = std::thread::hardware_concurrency();
 	auto squares_per_thread = board_.size() / n_threads;
-	std::vector<std::thread> threads;
+	std::vector<std::thread> threads(n_threads - 1);
 	std::mutex words_mutex;
 
 	for (unsigned int i = 0; i < n_threads - 1; ++i) {
-		threads.push_back(std::thread([=, &words, &words_mutex]() {
+		threads[i] = std::thread([=, &words, &words_mutex]() {
 			for (auto j = squares_per_thread * i; j < squares_per_thread * (i + 1); ++j) {
 				solve(j, words, words_mutex);
 			}
-		}));
+		});
 	}
 
 	// Main thread takes care of last remaining squares.
@@ -165,7 +166,7 @@ std::vector<std::string> Boggle<N, M>::solve() const {
 	return words;
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 void Boggle<N, M>::load_dictionary(const std::string& file) {
 	std::vector<std::string> words;
 	std::ifstream infile(file);
@@ -184,7 +185,7 @@ void Boggle<N, M>::load_dictionary(const std::string& file) {
 	}
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 void
 Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words, std::mutex& words_mutex) const {
 	// A modified DFS algorithm is used to find all words in the Boggle board.
@@ -229,15 +230,15 @@ Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words, std::mutex& 
 	}
 }
 
-template<std::size_t N, std::size_t M>
+template <std::size_t N, std::size_t M>
 bool Boggle<N, M>::ascii_word(const std::string& s) {
 	return std::all_of(s.begin(), s.end(), [](char c) {
 		return (c >= 'A' and c <= 'Z') or (c >= 'a' and c <= 'z');
 	});
 }
 
-template<std::size_t N, std::size_t M>
-template<typename T>
+template <std::size_t N, std::size_t M>
+template <typename T>
 std::string Boggle<N, M>::path2word(const T& path) const {
 	std::string word;
 	for (auto i : path) {
