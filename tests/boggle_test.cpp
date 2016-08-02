@@ -72,6 +72,7 @@ TEST(BoggleTest, LoadDictionary) {
  * Test the solving of 100 4x4 Boggle boards. Test data extracted from wordplays.com, which uses the
  * TWL dictionary, and stored in a CSV file.
  */
+#if 1
 TEST(BoggleTest, Solve4x4) {
 	Boggle<4>::load_dictionary(DICT_PATH);
 
@@ -100,3 +101,18 @@ TEST(BoggleTest, Solve4x4) {
 		EXPECT_EQ(solution.size(), n_solutions) << "Boggle board: " << boggle_board;
 	}
 }
+
+#endif
+
+#if 0
+TEST(BoggleTest, Foo) {
+	Boggle<>::load_dictionary(DICT_PATH);
+	Boggle<> boggle("PSLAMSEMAYEKAEUR");
+	auto words = boggle.solve();
+	std::cout << std::endl;
+	for (auto word : words) {
+		std::cout << word << std::endl;
+	}
+}
+
+#endif

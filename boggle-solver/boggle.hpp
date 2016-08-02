@@ -3,8 +3,11 @@
 #include <algorithm>
 #include <array>
 #include <fstream>
+#include <functional>
+#include <mutex>
 #include <stack>
 #include <string>
+#include <thread>
 #include <vector>
 #include <boost/container/static_vector.hpp>
 
@@ -13,7 +16,7 @@
 /*
  * Represents an N by M Boggle board.
  */
-template <std::size_t N = 4, std::size_t M = N>
+template<std::size_t N = 4, std::size_t M = N>
 class Boggle {
 public:
 	Boggle() = delete;
@@ -93,9 +96,10 @@ private:
 
 	/*
 	 * Find all words that start from the ith element of the Boggle board and place them in the
-	 * given vector. No bounds checks are made.
+	 * given vector. Words are only pushed into the vector if the given mutex is unlocked. No bounds
+	 * checks are made.
 	 */
-	void solve(std::size_t i, std::vector<std::string>& words) const;
+	void solve(std::size_t i, std::vector<std::string>& words, std::mutex& words_mutex) const;
 
 	/*
 	 * Return the word formed by following the given path through the Boggle board.
@@ -110,40 +114,58 @@ private:
 };
 
 /* Redeclaration of static data members. */
-template <std::size_t N, std::size_t M>
+template<std::size_t N, std::size_t M>
 Trie Boggle<N, M>::trie;
 
-template <std::size_t N, std::size_t M>
+template<std::size_t N, std::size_t M>
 const typename Boggle<N, M>::NeighbourTable Boggle<N, M>::neighbour_table;
 
-template <std::size_t N, std::size_t M>
+template<std::size_t N, std::size_t M>
 Boggle<N, M>::Boggle(const std::string& s) {
 	std::copy(s.begin(), s.end(), board_.begin());
 }
 
-template <std::size_t N, std::size_t M>
+template<std::size_t N, std::size_t M>
 const char *Boggle<N, M>::operator[](std::size_t i) const {
 	return &board_[M * i];
 }
 
-template <std::size_t N, std::size_t M>
+template<std::size_t N, std::size_t M>
 char *Boggle<N, M>::operator[](std::size_t i) {
 	return &board_[M * i];
 }
 
-template <std::size_t N, std::size_t M>
+template<std::size_t N, std::size_t M>
 std::vector<std::string> Boggle<N, M>::solve() const {
-	// TODO make multithreaded
 	std::vector<std::string> words;
 	words.reserve(512); // There is typically at most 500 words in a 4 by 4 Boggle board.
-	for (std::size_t i = 0; i < board_.size(); ++i) {
-		solve(i, words);
+
+	// Create threads and assign Boggle squares to each. Create mutex to ensure writes to protect
+	// words.
+	auto n_threads = std::thread::hardware_concurrency();
+	auto squares_per_thread = board_.size() / n_threads;
+	std::vector<std::thread> threads;
+	std::mutex words_mutex;
+
+	for (unsigned int i = 0; i < n_threads - 1; ++i) {
+		threads.push_back(std::thread([=, &words, &words_mutex]() {
+			for (auto j = squares_per_thread * i; j < squares_per_thread * (i + 1); ++j) {
+				solve(j, words, words_mutex);
+			}
+		}));
 	}
+
+	// Main thread takes care of last remaining squares.
+	for (auto j = squares_per_thread * (n_threads - 1); j < board_.size(); ++j) {
+		solve(j, words, words_mutex);
+	}
+
+	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 
 	return words;
 }
 
-template <std::size_t N, std::size_t M>
+template<std::size_t N, std::size_t M>
 void Boggle<N, M>::load_dictionary(const std::string& file) {
 	std::vector<std::string> words;
 	std::ifstream infile(file);
@@ -162,8 +184,9 @@ void Boggle<N, M>::load_dictionary(const std::string& file) {
 	}
 }
 
-template <std::size_t N, std::size_t M>
-void Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words) const {
+template<std::size_t N, std::size_t M>
+void
+Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words, std::mutex& words_mutex) const {
 	// A modified DFS algorithm is used to find all words in the Boggle board.
 	// A typical non-recursive DFS uses a stack to hold the nodes of a graph that need to be
 	// visited, and a separate data structure keeps track of which nodes have been visited.
@@ -188,6 +211,7 @@ void Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words) const {
 		}
 		if (word.size() >= 3 and trie.has_string(word.c_str())) {
 			// Make sure word is unique.
+			std::lock_guard<std::mutex> guard(words_mutex);
 			if (std::find(words.begin(), words.end(), word) == words.end()) {
 				words.push_back(std::move(word));
 			}
@@ -205,14 +229,14 @@ void Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words) const {
 	}
 }
 
-template <std::size_t N, std::size_t M>
+template<std::size_t N, std::size_t M>
 bool Boggle<N, M>::ascii_word(const std::string& s) {
 	return std::all_of(s.begin(), s.end(), [](char c) {
 		return (c >= 'A' and c <= 'Z') or (c >= 'a' and c <= 'z');
 	});
 }
 
-template <std::size_t N, std::size_t M>
+template<std::size_t N, std::size_t M>
 template<typename T>
 std::string Boggle<N, M>::path2word(const T& path) const {
 	std::string word;
