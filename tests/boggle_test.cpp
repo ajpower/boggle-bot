@@ -1,6 +1,9 @@
 /*
  * Unit tests for the Boggle class.
  */
+#include <fstream>
+#include <sstream>
+
 #include "gtest/gtest.h"
 #include "boggle.hpp"
 
@@ -65,6 +68,33 @@ TEST(BoggleTest, LoadDictionary) {
 	Boggle<>::load_dictionary(DICT_PATH);
 }
 
+/*
+ * Test the solving of 100 4x4 Boggle boards. Test data extracted from wordplays.com, which uses the
+ * TWL dictionary, and stored in a CSV file.
+ */
 TEST(BoggleTest, Solve4x4) {
 	Boggle<4>::load_dictionary(DICT_PATH);
+
+	std::ifstream file(TEST_DATA_DIR"/boggle_4x4.csv");
+	std::string line;
+	while (std::getline(file, line)) {
+		std::string boggle_board;
+		std::string n_solutions_str;
+
+		std::stringstream ss(line);
+		char c;
+		while (ss.peek() != ',') {
+			ss >> c;
+			boggle_board.push_back(c);
+		}
+		ss.ignore();
+		while (ss >> c) {
+			n_solutions_str.push_back(c);
+		}
+
+		Boggle<4> boggle(boggle_board);
+		auto solution = boggle.solve();
+		int n_solutions = std::stoi(n_solutions_str);
+		EXPECT_EQ(solution.size(), n_solutions) << "Boggle board: " << boggle_board;
+	}
 }
