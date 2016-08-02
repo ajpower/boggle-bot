@@ -18,6 +18,10 @@ class Wordplays:
     def __init__(self):
         # Session object to handle cookie persistence etc.
         self._session = requests.Session()
+        # User-Agent data to mimic browser.
+        self._user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/' \
+                           '537.36 (KHTML, like Gecko) Chrome/52.0.2743.82' \
+                           ' Safari/537.36'
 
     def __enter__(self):
         return self
@@ -37,7 +41,8 @@ class Wordplays:
         payload = {'userid': username, 'pwd': password, 'signin': 'Sign In'}
 
         try:
-            s = self._session.post(url=LOGIN_URL, data=payload)
+            headers = {'User-Agent': self._user_agent}
+            s = self._session.post(url=LOGIN_URL, data=payload, headers=headers)
         except requests.RequestException as e:
             raise RuntimeError(e) from e
 
@@ -46,7 +51,7 @@ class Wordplays:
         soup = BeautifulSoup(markup=s.text, features='lxml')
         return soup.find('div', attrs={'id': 'signed-in'}) is not None
 
-    def get_boggle(self):
+    def start_boggle(self):
         """Start a boggle game and return the boggle board.
 
         Raise a RuntimeError if boggle game cannot be started.
@@ -54,7 +59,8 @@ class Wordplays:
         :return Boggle object.
         """
         try:
-            s = self._session.get(BOGGLE_URL)
+            headers = {'User-Agent': self._user_agent}
+            s = self._session.get(BOGGLE_URL, headers=headers)
         except requests.RequestException as e:
             raise RuntimeError(e) from e
 

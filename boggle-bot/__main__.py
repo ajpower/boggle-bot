@@ -6,8 +6,9 @@ from wordplays import Wordplays
 with Wordplays() as wp:
     try:
         if not wp.login(username='totally_human', password='qwerty123'):
-            print('Username or password were incorrect.', file=sys.stderr)
+            print('Login unsuccessful.', file=sys.stderr)
             print('Exiting.', file=sys.stderr)
+            sys.exit(1)
     except RuntimeError as e:
         print('Error:', e, file=sys.stderr)
         print('Exiting.', file=sys.stderr)
@@ -15,4 +16,4 @@ with Wordplays() as wp:
 
     print('Login successful.')
 
-    print(wp.get_boggle())
+    print(wp.start_boggle())
