@@ -160,7 +160,14 @@ void Boggle<N, M>::load_dictionary(const std::string& file) {
 
 template <std::size_t N, std::size_t M>
 void Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words) const {
-	//TODO explain algorithm
+	// A modified DFS algorithm is used to find all words in the Boggle board.
+	// A typical non-recursive DFS uses a stack to hold the nodes of a graph that need to be
+	// visited, and a separate data structure keeps track of which nodes have been visited.
+	// In this implementation, a stack is used to hold the *paths* through the Boggle board that
+	// need to be analyzed and extended. Analysis means 1) checking whether the path makes a valid
+	// word; and 2) whether the path forms the prefix of a valid word (if not, path is discarded).
+	// Paths are extended by joining the neighbours of the last square of the path.
+
 	using path_t = boost::container::static_vector<std::size_t, N * M>;
 
 	std::stack<path_t> paths;
