@@ -135,6 +135,7 @@ template <std::size_t N, std::size_t M>
 std::vector<std::string> Boggle<N, M>::solve() const {
 	// TODO make multithreaded
 	std::vector<std::string> words;
+	words.reserve(512); // There is typically at most 500 words in a 4 by 4 Boggle board.
 	for (std::size_t i = 0; i < board_.size(); ++i) {
 		solve(i, words);
 	}
