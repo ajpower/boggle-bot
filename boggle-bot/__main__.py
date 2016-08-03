@@ -18,3 +18,9 @@ with Wordplays() as wp:
         sys.exit(1)
 
     print('Login successful.')
+
+    boggle_elements = wp.start_boggle()
+    b = Boggle(boggle_elements)
+    words = b.solve()
+    score, max_score = wp.solve(words)
+    print(score, max_score)
