@@ -1,6 +1,7 @@
 """Main entry point of boggle-bot."""
 import sys
 
+from boggle import Boggle
 from wordplays import Wordplays
 
 with Wordplays() as wp:
@@ -16,4 +17,6 @@ with Wordplays() as wp:
 
     print('Login successful.')
 
-    print(wp.start_boggle())
+    boggle_elements = wp.start_boggle()
+    b = Boggle(boggle_elements)
+    print(b.board())

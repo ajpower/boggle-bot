@@ -25,6 +25,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 	add_compile_options(-Wno-missing-braces)
 	add_compile_options(-Wno-padded)
 
+	add_compile_options(-fPIC)
+
 	if (CMAKE_BUILD_TYPE STREQUAL Debug)
 		add_compile_options(-g)
 		add_compile_options(-fno-omit-frame-pointer)
@@ -71,6 +73,8 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 	add_compile_options(-Wstrict-null-sentinel)
 	add_compile_options(-Wswitch-default)
 	add_compile_options(-Wundef)
+
+	add_compile_options(-fPIC)
 
 	if (CMAKE_BUILD_TYPE STREQUAL Debug)
 		add_compile_options(-g)
