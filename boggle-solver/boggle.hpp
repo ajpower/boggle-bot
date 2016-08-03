@@ -97,10 +97,15 @@ private:
 
 	/*
 	 * Find all words that start from the ith element of the Boggle board and place them in the
-	 * given vector. Words are only pushed into the vector if the given mutex is unlocked. No bounds
-	 * checks are made.
+	 * given vector. No bounds checks are made and duplicates are not removed.
 	 */
-	void solve(std::size_t i, std::vector<std::string>& words, std::mutex& words_mutex) const;
+	void solve(std::size_t i, std::vector<std::string>& words) const;
+
+	/*
+	 * Find all the words that start from squares in the range [start, end) and place them in the
+	 * given vector. No bounds checks are made and duplicates are not removed.
+	 */
+	void solve(std::size_t start, std::size_t end, std::vector<std::string>& words) const;
 
 	/*
 	 * Return the word formed by following the given path through the Boggle board.
@@ -141,25 +146,39 @@ std::vector<std::string> Boggle<N, M>::solve() const {
 	std::vector<std::string> words;
 	words.reserve(512); // There is typically at most 500 words in a 4 by 4 Boggle board.
 
-	// Create threads and assign Boggle squares to each. Create mutex to ensure 'words' is protected
-	// during writes.
 	auto n_threads = std::thread::hardware_concurrency();
 	auto squares_per_thread = board_.size() / n_threads;
 	std::vector<std::thread> threads(n_threads - 1);
 	std::mutex words_mutex;
 
-	for (unsigned int i = 0; i < n_threads - 1; ++i) {
-		threads[i] = std::thread([=, &words, &words_mutex]() {
-			for (auto j = squares_per_thread * i; j < squares_per_thread * (i + 1); ++j) {
-				solve(j, words, words_mutex);
+	// Find the words in the Boggle squares with indices in the range [start, end) and place them
+	// in words, removing duplicates in the process. This function will be executed by a thread, so
+	// mutex is used to protect 'words'.
+	std::function<void(std::size_t, std::size_t)> thread_fn = [=, &words, &words_mutex](
+			std::size_t start, std::size_t end) {
+		std::vector<std::string> partial_words;
+		partial_words.reserve(words.capacity());
+		solve(start, end, partial_words);
+
+		std::lock_guard<std::mutex> guard(words_mutex);
+		for (auto& word : partial_words) {
+			if (std::find(words.begin(), words.end(), word) == words.end()) {
+				words.push_back(std::move(word));
 			}
-		});
+		}
+	};
+
+	// Create n - 1 threads, where n is the number of hardware threads supported. Divide the Boggle
+	// board into n groups of squares and assign each group to a thread. A thread finds all the
+	// words starting from the squares in its group and places them into 'words'.
+	for (unsigned int i = 0; i < n_threads - 1; ++i) {
+		std::size_t start_square = squares_per_thread * i;
+		std::size_t end_square = squares_per_thread * (i + 1);
+		threads[i] = std::thread(thread_fn, start_square, end_square);
 	}
 
 	// Main thread takes care of last remaining squares.
-	for (auto j = squares_per_thread * (n_threads - 1); j < board_.size(); ++j) {
-		solve(j, words, words_mutex);
-	}
+	thread_fn(squares_per_thread * (n_threads - 1), board_.size());
 
 	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 
@@ -186,8 +205,7 @@ void Boggle<N, M>::load_dictionary(const std::string& file) {
 }
 
 template <std::size_t N, std::size_t M>
-void
-Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words, std::mutex& words_mutex) const {
+void Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words) const {
 	// A modified DFS algorithm is used to find all words in the Boggle board.
 	// A typical non-recursive DFS uses a stack to hold the nodes of a graph that need to be
 	// visited, and a separate data structure keeps track of which nodes have been visited.
@@ -212,10 +230,7 @@ Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words, std::mutex& 
 		}
 		if (word.size() >= 3 and trie.has_string(word.c_str())) {
 			// Make sure word is unique.
-			std::lock_guard<std::mutex> guard(words_mutex);
-			if (std::find(words.begin(), words.end(), word) == words.end()) {
 				words.push_back(std::move(word));
-			}
 		}
 
 		std::size_t last_square = path.back();
@@ -229,6 +244,14 @@ Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words, std::mutex& 
 		}
 	}
 }
+
+template <std::size_t N, std::size_t M>
+void
+Boggle<N, M>::solve(std::size_t start, std::size_t end, std::vector<std::string>& words) const {
+	for (auto i = start; i < end; ++i) {
+		solve(i, words);
+	}
+};
 
 template <std::size_t N, std::size_t M>
 bool Boggle<N, M>::ascii_word(const std::string& s) {
