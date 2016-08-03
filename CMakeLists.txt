@@ -20,6 +20,8 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
 
 	add_compile_options(-Wno-c++98-compat)
 	add_compile_options(-Wno-c++98-compat-pedantic)
+	add_compile_options(-Wno-exit-time-destructors)
+	add_compile_options(-Wno-global-constructors)
 	add_compile_options(-Wno-missing-braces)
 	add_compile_options(-Wno-padded)
 
