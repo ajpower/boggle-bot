@@ -56,7 +56,7 @@ class Wordplays:
 
         Raise a RuntimeError if boggle game cannot be started.
 
-        :return Boggle object.
+        :return List of characters in the Boggle board.
         """
         try:
             headers = {'User-Agent': self._user_agent}

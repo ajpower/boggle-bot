@@ -4,6 +4,8 @@ import sys
 from boggle import Boggle
 from wordplays import Wordplays
 
+Boggle.load_dictionary('dict.list')
+
 with Wordplays() as wp:
     try:
         if not wp.login(username='totally_human', password='qwerty123'):
@@ -16,7 +18,3 @@ with Wordplays() as wp:
         sys.exit(1)
 
     print('Login successful.')
-
-    boggle_elements = wp.start_boggle()
-    b = Boggle(boggle_elements)
-    print(b.board())

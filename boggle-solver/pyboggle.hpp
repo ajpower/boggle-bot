@@ -25,14 +25,14 @@ public:
 	bpy::list board() const;
 
 	/*
-	 * Load a dictionary. Must be called before 'solve'.
-	 */
-	void load_dictionary(const std::string& dictionary_path);
-
-	/*
 	 * Return the words in the Boggle board.
 	 */
 	std::vector<std::string> solve() const;
+
+	/*
+	 * Load a dictionary. Must be called before 'solve'.
+	 */
+	static void load_dictionary(const std::string& dictionary_path);
 
 private:
 	Boggle<4, 4> boggle_;
@@ -49,6 +49,6 @@ BOOST_PYTHON_MODULE (boggle) {
 
 	bpy::class_<PyBoggle>("Boggle", bpy::init<const bpy::object&>())
 			.def("board", &PyBoggle::board)
-			.def("load_dictionary", &PyBoggle::load_dictionary)
+			.def("load_dictionary", &PyBoggle::load_dictionary).staticmethod("load_dictionary")
 			.def("solve", &PyBoggle::solve);
 }

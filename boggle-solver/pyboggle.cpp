@@ -19,11 +19,11 @@ bpy::list PyBoggle::board() const {
 	return character_list;
 }
 
-void PyBoggle::load_dictionary(const std::string& dictionary_path) {
-	boggle_.load_dictionary(dictionary_path);
-}
-
 std::vector<std::string> PyBoggle::solve() const {
 	std::vector<std::string> words = boggle_.solve();
 	return words;
+}
+
+void PyBoggle::load_dictionary(const std::string& dictionary_path) {
+	Boggle<4, 4>::load_dictionary(dictionary_path);
 }
