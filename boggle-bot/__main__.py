@@ -1,11 +1,13 @@
 """Main entry point of boggle-bot."""
+import os
 import sys
 import time
 
 from boggle import Boggle
 from wordplays import Wordplays
 
-Boggle.load_dictionary('dict.list')
+dir = os.path.dirname(__file__)
+Boggle.load_dictionary(dir + '/dict.list')
 
 with Wordplays() as wp:
     try:
