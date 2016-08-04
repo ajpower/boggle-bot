@@ -173,9 +173,9 @@ std::vector<std::string> Boggle<N, M>::solve() const {
 	std::vector<std::thread> threads(n_threads - 1);
 	std::mutex words_mutex;
 
-	// Find the words in the Boggle squares with indices in the range [start, end) and place them
-	// in words, removing duplicates in the process. This function will be executed by a thread, so
-	// mutex is used to protect 'words'.
+	// Find the words which start at the Boggle squares with indices in the range [start, end) and place
+	// them in 'words', removing duplicates in the process. This function will be executed by a thread,
+	// so a mutex is used to protect 'words'.
 	std::function<void(std::size_t, std::size_t)> thread_fn = [=, &words, &words_mutex](
 			std::size_t start, std::size_t end) {
 		std::vector<std::string> partial_words;
