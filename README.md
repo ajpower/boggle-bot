@@ -2,16 +2,22 @@
 Boggle playing bot for wordplays.com.
 
 There are two components to the bot. The first is a multithreaded Boggle-solving engine written in C++14 and interfaced to
-Python with Boost.Python. This engine can solve a 4x4 Boggle board in approximately 80 microseconds. The second component is a web-scraper written in Python using the `BeautifulSoup` and `requests` modules.
+Python with Boost.Python. This engine can solve a 4x4 Boggle board in approximately 90 microseconds on an Intel Core i7-3630QM:
+
+![benchmark](/.benchmark.png)
+
+The second component is a web-scraper written in Python using the `BeautifulSoup` and `requests` modules.
 
 # Compiling
-Compiling the boggle module requires 
+Compiling the `boggle` module requires 
 
 1. `cmake` and `make`
 2. the Boost libraries
 3. either `clang` or `gcc`.
 
 Inside the project directory, create a directory called `build`, enter it, and run `cmake ..`. You can optionally specify an alternative compiler by passing the `-DCMAKE_CXX_COMPILER=<your compiler>` option to `cmake`. Then run `make`. The Python module `boggle.so` should now appear in the directory `boggle-bot`.
+
+The dependencies for the bot itself can be installed with the command `pip install -r requirements.txt`.
 
 # Running
 To execute the bot, simply run the command `python3 boggle-bot`. You will be prompted for a username and password.
