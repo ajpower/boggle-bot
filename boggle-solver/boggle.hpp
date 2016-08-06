@@ -171,13 +171,14 @@ std::vector<std::string> Boggle<N, M>::solve() const {
 	auto n_threads = std::thread::hardware_concurrency();
 	auto squares_per_thread = board_.size() / n_threads;
 	std::vector<std::thread> threads(n_threads - 1);
-	std::mutex words_mutex;
 
 	// Find the words which start at the Boggle squares with indices in the range [start, end) and place
 	// them in 'words', removing duplicates in the process. This function will be executed by a thread,
 	// so a mutex is used to protect 'words'.
-	std::function<void(std::size_t, std::size_t)> thread_fn = [=, &words, &words_mutex](
+	std::function<void(std::size_t, std::size_t)> thread_fn = [=, &words](
 			std::size_t start, std::size_t end) {
+		static std::mutex words_mutex;
+
 		std::vector<std::string> partial_words;
 		partial_words.reserve(words.capacity());
 		solve(start, end, partial_words);
