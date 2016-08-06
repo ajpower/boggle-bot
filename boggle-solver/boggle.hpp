@@ -109,15 +109,15 @@ protected:
 
 	/*
 	 * Find all words that start from the ith element of the Boggle board and place them in the
-	 * given vector. No bounds checks are made and duplicates are not removed.
+	 * given vector. No bounds checks are made and duplicates are not removed. Not thread safe.
 	 */
-	void solve(std::size_t i, std::vector<std::string>& words) const;
+	void solve_starting_at(std::size_t i, std::vector<std::string>& words) const;
 
 	/*
 	 * Find all the words that start from squares in the range [start, end) and place them in the
-	 * given vector. No bounds checks are made and duplicates are not removed.
+	 * given vector without duplication. The function is thread safe. No bounds checks are made.
 	 */
-	void solve(std::size_t start, std::size_t end, std::vector<std::string>& words) const;
+	void solve_between(std::size_t start, std::size_t end, std::vector<std::string>& words) const;
 
 	/*
 	 * Return the word formed by following the given path through the Boggle board.
@@ -172,36 +172,18 @@ std::vector<std::string> Boggle<N, M>::solve() const {
 	auto squares_per_thread = board_.size() / n_threads;
 	std::vector<std::thread> threads(n_threads - 1);
 
-	// Find the words which start at the Boggle squares with indices in the range [start, end) and place
-	// them in 'words', removing duplicates in the process. This function will be executed by a thread,
-	// so a mutex is used to protect 'words'.
-	std::function<void(std::size_t, std::size_t)> thread_fn = [=, &words](
-			std::size_t start, std::size_t end) {
-		static std::mutex words_mutex;
-
-		std::vector<std::string> partial_words;
-		partial_words.reserve(words.capacity());
-		solve(start, end, partial_words);
-
-		std::lock_guard<std::mutex> guard(words_mutex);
-		for (auto& word : partial_words) {
-			if (std::find(words.begin(), words.end(), word) == words.end()) {
-				words.push_back(std::move(word));
-			}
-		}
-	};
-
 	// Create n - 1 threads, where n is the number of hardware threads supported. Divide the Boggle
 	// board into n groups of squares and assign each group to a thread. A thread finds all the
 	// words starting from the squares in its group and places them into 'words'.
 	for (unsigned int i = 0; i < n_threads - 1; ++i) {
 		std::size_t start_square = squares_per_thread * i;
 		std::size_t end_square = squares_per_thread * (i + 1);
-		threads[i] = std::thread(thread_fn, start_square, end_square);
+		threads[i] = std::thread(
+				&Boggle<N, M>::solve_between, this, start_square, end_square, std::ref(words));
 	}
 
 	// Main thread takes care of last remaining squares.
-	thread_fn(squares_per_thread * (n_threads - 1), board_.size());
+	solve_between(squares_per_thread * (n_threads - 1), board_.size(), words);
 
 	std::for_each(threads.begin(), threads.end(), std::mem_fn(&std::thread::join));
 
@@ -228,7 +210,7 @@ void Boggle<N, M>::load_dictionary(const std::string& file) {
 }
 
 template <std::size_t N, std::size_t M>
-void Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words) const {
+void Boggle<N, M>::solve_starting_at(std::size_t i, std::vector<std::string>& words) const {
 	// A modified DFS algorithm is used to find all words in the Boggle board.
 	// A typical non-recursive DFS uses a stack to hold the nodes of a graph that need to be
 	// visited, and a separate data structure keeps track of which nodes have been visited.
@@ -268,10 +250,23 @@ void Boggle<N, M>::solve(std::size_t i, std::vector<std::string>& words) const {
 }
 
 template <std::size_t N, std::size_t M>
-void
-Boggle<N, M>::solve(std::size_t start, std::size_t end, std::vector<std::string>& words) const {
+void Boggle<N, M>::solve_between(std::size_t start, std::size_t end,
+                                 std::vector<std::string>& words) const {
+	// Place the words in a temporary buffer first and transfer them into 'words' after all words
+	// have been found. This avoids having to keep `words` locked for the entire function call.
+	static std::mutex words_lock;
+	std::vector<std::string> tmp_buffer;
+	tmp_buffer.reserve(words.capacity());
+
 	for (auto i = start; i < end; ++i) {
-		solve(i, words);
+		solve_starting_at(i, tmp_buffer);
+	}
+
+	std::lock_guard<std::mutex> guard(words_lock);
+	for (auto& word : tmp_buffer) {
+		if (std::find(words.begin(), words.end(), word) == words.end()) {
+			words.push_back(std::move(word));
+		}
 	}
 };
 
