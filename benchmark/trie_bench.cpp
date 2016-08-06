@@ -29,7 +29,7 @@ std::vector<std::string> load_dictionary() {
 	while (std::getline(file, line)) {
 		if (ascii_word(line)) {
 			std::transform(line.begin(), line.end(), line.begin(), ::toupper);
-			words.push_back(line);
+			words.push_back(std::move(line));
 		}
 	}
 
